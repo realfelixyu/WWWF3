@@ -1,0 +1,61 @@
+buttontest.png
+size: 2000, 1000
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+buttontest_alert1
+  rotate: false
+  xy: 0, 0
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_alert2
+  rotate: false
+  xy: 500, 0
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_death1
+  rotate: false
+  xy: 1000, 0
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_death2
+  rotate: false
+  xy: 1500, 0
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_unit1
+  rotate: false
+  xy: 0, 500
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_unit2
+  rotate: false
+  xy: 500, 500
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_x1
+  rotate: false
+  xy: 1000, 500
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+buttontest_x2
+  rotate: false
+  xy: 1500, 500
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1

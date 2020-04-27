@@ -28,6 +28,10 @@ public class Entity {
                 Gdx.app.log("ERROR", "Type " + type + " does not exist");
         }
     }
+
+    public boolean hit(float x, float y) {
+        return false;
+    }
 }
 
 
