@@ -67,7 +67,7 @@ public class ClientInputProcessor extends InputAdapter {
     }
 
     public boolean touchUp(int screenX, int screenY, int pointer, int button){
-        screen.fixedCoord = null;
+        screen.selectRectFixCoord = null;
         return false;
     }
 }

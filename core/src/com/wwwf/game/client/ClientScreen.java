@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.wwwf.game.*;
 import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
@@ -36,6 +37,7 @@ public class ClientScreen implements Screen {
     ShapeRenderer shapeRenderer;
     float time = 0;
     Server server;
+    Array<Entity> selectedEntities;
     public ClientScreen(Server server) {
         AnimationLoader.loadAnimations();
         this.world = server.world;
@@ -46,6 +48,7 @@ public class ClientScreen implements Screen {
         shapeRenderer = new ShapeRenderer();
         tiledMapRenderer = new OrthogonalTiledMapRenderer(world.map.map, world.map.unitScale);
         camDir = new Vector2(0,0);
+        selectedEntities = new Array<>();
 
         InputProcessor inputProcessor = new ClientInputProcessor(this);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -92,7 +95,6 @@ public class ClientScreen implements Screen {
             shapeRenderer.circle(e.pivotPos.x, e.pivotPos.y, 0.02f, 10);
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.circle(e.pivotPos.x, e.pivotPos.y, 0.01f, 10);
-
         }
         shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
