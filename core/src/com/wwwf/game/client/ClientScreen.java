@@ -59,6 +59,7 @@ public class ClientScreen implements Screen {
         selectedEntities = new Array<>();
 
         tophud = new TopHud(this);
+        //minimap = new MiniMap(world);
 
         InputProcessor inputProcessor = new ClientInputProcessor(this);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -74,6 +75,8 @@ public class ClientScreen implements Screen {
         cam.translate(new Vector2(camDir).scl(camSpeed));
         cam.update();
         time += Gdx.graphics.getDeltaTime();
+        world.update();
+        tophud.update();
     }
 
     @Override

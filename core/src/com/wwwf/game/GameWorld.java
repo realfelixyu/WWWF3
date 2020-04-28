@@ -1,10 +1,12 @@
 package com.wwwf.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 
@@ -17,14 +19,14 @@ public class GameWorld implements Telegraph {
     public Map map;
     public Array<Entity> ents;
     public int idTicker;
-
+    private float timeCount;
 
     GameWorld() {
         physicsWorld = new World(new Vector2(0, 0.0f), true);
         map = new Map("maps/bigfield/bigfield.tmx");
         ents = new Array<>();
         idTicker = 1;
-
+        timeCount = 0;
     }
     public void update() {
         physicsWorld.step(Utils.UPS, 6, 2);
@@ -34,6 +36,8 @@ public class GameWorld implements Telegraph {
                 e.comps.get(c).update(Utils.UPS);
             }
         }
+        timeCount += Utils.UPS;
+        physicsWorld.step(1/60f, 6,2);
     }
 
     @Override
@@ -46,5 +50,9 @@ public class GameWorld implements Telegraph {
                 break;
         }
         return false;
+    }
+
+    public float getTime() {
+        return timeCount;
     }
 }

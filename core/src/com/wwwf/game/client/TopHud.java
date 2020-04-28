@@ -17,9 +17,6 @@ public class TopHud implements Disposable {
     private Stage hudStage;
     private Viewport viewport;
 
-    //state variables
-    private Integer secondTimer;
-    private Integer minuteTimer;
     private int gold;
     //the population number for the amount of units this player has currently
     private int popCount;
@@ -36,12 +33,12 @@ public class TopHud implements Disposable {
         hudStage = new Stage(viewport);
 
         popCount = 0;
-        secondTimer = 0;
-        minuteTimer = 0;
-        //gold = player.getGold();
+        gold = 0;
+        int seconds = (int) player.world.getTime() % 60;
+        int minutes = (int) player.world.getTime() / 60;
 
         //can pass in skins in label constructor in the future
-        worldTimerLabel = new Label(String.format("%02d", minuteTimer) + ":" +String.format("%02d", secondTimer), new Label.LabelStyle(new BitmapFont(), Color.GREEN));
+        worldTimerLabel = new Label(String.format("%02d:%02d", minutes, seconds), new Label.LabelStyle(new BitmapFont(), Color.GREEN));
         goldLabel = new Label("Gold" + String.format("%4d", gold), new Label.LabelStyle(new BitmapFont(), Color.YELLOW));
         popCountLabel = new Label("Pop:" + String.format("%3d", popCount), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
 
@@ -59,8 +56,8 @@ public class TopHud implements Disposable {
         return hudStage;
     }
 
-    public void update(int worldSeconds, int worldMinutes) {
-        worldTimerLabel.setText(String.format("%02d", worldMinutes) + ":" + String.format("%02d", worldSeconds));
+    public void update() {
+        worldTimerLabel.setText(String.format("%02d:%02d", (int)player.world.getTime() / 60, (int)player.world.getTime() % 60));
     }
 
     @Override
