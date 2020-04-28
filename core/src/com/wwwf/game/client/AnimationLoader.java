@@ -33,7 +33,8 @@ public class AnimationLoader {
             MISSING_ANIMATION = new Animation2(new float[]{1}, temp, temp);
 
             typeToAnimations = new HashMap<Entity.Type, HashMap<String, Animation2>>();
-            typeToAnimations.put(Entity.Type.SCOUT, loadAnimationsFromSheet("animations/scout"));
+            typeToAnimations.put(Entity.Type.SCOUT, loadAnimationsFromSheet("animations/unit1_V01"));
+            //typeToAnimations.put(Entity.Type.SCOUT, loadAnimationsFromSheet("animations/scout"));
         }
         public static HashMap<String, Animation2> loadAnimationsFromSheet(String filename) {
             HashMap<String, Animation2> animations = new HashMap<String, Animation2>();

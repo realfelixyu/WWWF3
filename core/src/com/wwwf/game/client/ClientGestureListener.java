@@ -45,14 +45,15 @@ public class ClientGestureListener implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
-        for (Entity ent : screen.world.ents) {
-            if (screen.selectRect.contains(ent.pivotPos.x, ent.pivotPos.y)) {
+        for (Entity e : screen.world.ents) {
+            if (screen.selectRect != null && ClientUtils.hitbox(e).overlaps(screen.selectRect)) {
                 //TODO make it so that only ally units can get pan selected
-                screen.selectedEntities.add(ent);
+                screen.selectedEntities.add(e);
             }
         }
         screen.selectRect = null;
         screen.selectRectFixCoord = null;
+
         return false;
     }
 

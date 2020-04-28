@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
+import com.sun.org.apache.xml.internal.serializer.EncodingInfo;
 import com.wwwf.game.*;
 import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
@@ -64,8 +66,8 @@ public class ClientScreen implements Screen {
         inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-        Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1));
-        Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1));
+        Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1, 1));
+        Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1, 2));
 
     }
     private void update() {
@@ -83,14 +85,30 @@ public class ClientScreen implements Screen {
         tiledMapRenderer.setView(cam);
         tiledMapRenderer.render();
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.GREEN);
+        for (Entity e : selectedEntities) {
+            shapeRenderer.circle(e.pivotPos.x, e.pivotPos.y, e.baseWidth/2, 40);
+        }
+        shapeRenderer.end();
+
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         for (Entity e : world.ents) {
             Animation2 a = AnimationLoader.getAnimation(e.type, e.anim);
             TextureRegion[] r = a.getKeyframe(time);
             Vector2 pivotRatio = a.getPivotRatio();
+            batch.setColor(Color.WHITE);
+
             batch.draw(r[0], e.pivotPos.x - pivotRatio.x * e.baseWidth,
                     e.pivotPos.y - pivotRatio.y * e.baseHeight, e.baseWidth, e.baseHeight);
+
+            Color c = Player.PLAYER_COLORS[e.playerId];
+            c.a = e.health;
+            batch.setColor(c);
+            batch.draw(r[1], e.pivotPos.x - pivotRatio.x * e.baseWidth,
+                    e.pivotPos.y - pivotRatio.y * e.baseHeight, e.baseWidth, e.baseHeight);
+
         }
         batch.end();
 
@@ -106,15 +124,19 @@ public class ClientScreen implements Screen {
         }
         shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (Entity e : world.ents) {
+            Rectangle r = ClientUtils.hitbox(e);
+            shapeRenderer.rect(r.x, r.y, r.width, r.height);
+        }
         if( selectRect != null) {
             shapeRenderer.rect(selectRect.x, selectRect.y, selectRect.width, selectRect.height);
         }
         shapeRenderer.end();
 
         tophud.getHudStage().draw();
-
-
     }
+
+
     @Override
     public void dispose() {
         batch.dispose();
