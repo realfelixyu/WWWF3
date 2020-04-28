@@ -7,6 +7,7 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.wwwf.game.Entity;
 import com.wwwf.game.Utils;
 
 public class ClientInputProcessor extends InputAdapter {
@@ -37,14 +38,36 @@ public class ClientInputProcessor extends InputAdapter {
         return false;
     }
     public boolean touchDown (int x, int y, int pointer, int button) {
+        Vector3 worldCoord = screen.cam.unproject(new Vector3(x,y,0));
+        if (button == Input.Buttons.LEFT) {
+            for (Entity ent : screen.world.ents) {
+                if (ent.hit(worldCoord.x, worldCoord.y)) {
+                    screen.selectedEntities.add(ent);
+                } else {
+                    screen.selectedEntities.clear();
+                }
+            }
+        }
+//        if(button == Input.Buttons.RIGHT) {
+//            for (Entity entity : client.selectedEntities) {
+//                MessageManager.getInstance().dispatchMessage(0, null,
+//                        server.world, Constants.TELEGRAM_MOVETO, new Vector2(worldCoord.x,worldCoord.y), false);
+//            }
+//        }
         if(screen.selectRectFixCoord == null) {
             screen.selectRectFixCoord = screen.cam.unproject(new Vector3(x, y, 0));
         }
         return false;
     }
+
     public boolean scrolled (int amount) {
         zoomPoints += amount;
         screen.cam.zoom = (float)Math.exp(zoomPoints / zoomSpeed);
+        return false;
+    }
+
+    public boolean touchUp(int screenX, int screenY, int pointer, int button){
+        screen.fixedCoord = null;
         return false;
     }
 }

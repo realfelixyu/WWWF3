@@ -34,9 +34,15 @@ public class Entity {
                 Gdx.app.log("ERROR", "Type " + type + " does not exist");
         }
     }
+
+    public boolean hit(float x, float y) {
+        return false;
+    }
+
     public void updateComponents() {
 
     }
+
     public void setAnimation(String action, String dir) {
         this.direction = (dir == null) ? this.direction :  dir;
         this.action = (action == null) ? this.action : action;
