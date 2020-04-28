@@ -5,6 +5,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.wwwf.game.Entity;
 
 public class ClientGestureListener implements GestureDetector.GestureListener {
     ClientScreen screen;
@@ -44,6 +45,12 @@ public class ClientGestureListener implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
+        for (Entity ent : screen.world.ents) {
+            if (screen.selectRect.contains(ent.pivotPos.x, ent.pivotPos.y)) {
+                //TODO make it so that only ally units can get pan selected
+                screen.selectedEntities.add(ent);
+            }
+        }
         screen.selectRect = null;
         screen.selectRectFixCoord = null;
         return false;

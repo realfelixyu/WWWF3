@@ -48,7 +48,7 @@ public class ClientInputProcessor extends InputAdapter {
                 }
             }
         }
-//        if(button == Input.Buttons.RIGHT) {
+//        else if(button == Input.Buttons.RIGHT) {
 //            for (Entity entity : client.selectedEntities) {
 //                MessageManager.getInstance().dispatchMessage(0, null,
 //                        server.world, Constants.TELEGRAM_MOVETO, new Vector2(worldCoord.x,worldCoord.y), false);

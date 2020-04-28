@@ -22,6 +22,7 @@ import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
 
 import javax.swing.plaf.InputMapUIResource;
+import java.util.Objects;
 
 public class ClientScreen implements Screen {
     GameWorld world;
@@ -38,6 +39,11 @@ public class ClientScreen implements Screen {
     float time = 0;
     Server server;
     Array<Entity> selectedEntities;
+
+    //work in progress
+    public MiniMap minimap;
+    public TopHud tophud;
+
     public ClientScreen(Server server) {
         AnimationLoader.loadAnimations();
         this.world = server.world;
@@ -49,6 +55,8 @@ public class ClientScreen implements Screen {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(world.map.map, world.map.unitScale);
         camDir = new Vector2(0,0);
         selectedEntities = new Array<>();
+
+        tophud = new TopHud(this);
 
         InputProcessor inputProcessor = new ClientInputProcessor(this);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -103,7 +111,7 @@ public class ClientScreen implements Screen {
         }
         shapeRenderer.end();
 
-
+        tophud.getHudStage().draw();
 
 
     }
