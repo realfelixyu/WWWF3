@@ -15,6 +15,6 @@ public class Entry extends Game {
 	@Override
 	public void create() {
 		Server server = new Server();
-		this.setScreen(new ClientScreen(server.world));
+		this.setScreen(new ClientScreen(server));
 	}
 }

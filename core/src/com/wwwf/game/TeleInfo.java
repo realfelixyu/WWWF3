@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class TeleInfo {
     public static final int SPAWN_UNIT = 1;
+    public static final int MOVE_UNITS = 2;
 
     public static class SpawnUnit {
         public Entity.Type type;

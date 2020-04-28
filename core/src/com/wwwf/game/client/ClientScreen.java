@@ -16,10 +16,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.wwwf.game.Entity;
-import com.wwwf.game.GameWorld;
-import com.wwwf.game.TeleInfo;
-import com.wwwf.game.Utils;
+import com.wwwf.game.*;
 import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
 
@@ -38,9 +35,11 @@ public class ClientScreen implements Screen {
     OrthogonalTiledMapRenderer tiledMapRenderer;
     ShapeRenderer shapeRenderer;
     float time = 0;
-    public ClientScreen(GameWorld world) {
+    Server server;
+    public ClientScreen(Server server) {
         AnimationLoader.loadAnimations();
-        this.world = world;
+        this.world = server.world;
+        this.server = server;
         viewAspRatio = ((float) Gdx.graphics.getHeight()) / Gdx.graphics.getWidth();
         cam = new OrthographicCamera(camWorldWidth, camWorldWidth * viewAspRatio);
         batch = new SpriteBatch();
@@ -54,9 +53,8 @@ public class ClientScreen implements Screen {
         inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
         Gdx.input.setInputProcessor(inputMultiplexer);
 
-
-        Utils.message(0, world, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1));
-        Utils.message(1, world, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1));
+        Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1));
+        Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1));
 
     }
     private void update() {
