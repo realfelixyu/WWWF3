@@ -5,6 +5,8 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 
 import java.util.ArrayList;
 
@@ -13,15 +15,25 @@ import java.util.ArrayList;
 public class GameWorld implements Telegraph {
     World physicsWorld;
     public Map map;
-    public ArrayList<Entity> ents;
+    public Array<Entity> ents;
+    public int idTicker;
+
 
     GameWorld() {
-        physicsWorld = new World(new Vector2(0, 0.1f), true);
+        physicsWorld = new World(new Vector2(0, 0.0f), true);
         map = new Map("maps/bigfield/bigfield.tmx");
-        ents = new ArrayList<>();
+        ents = new Array<>();
+        idTicker = 1;
+
     }
     public void update() {
-        physicsWorld.step(1/60f, 6, 2);
+        physicsWorld.step(Utils.UPS, 6, 2);
+        for (int i = 0; i < ents.size; i++) {
+            Entity e = ents.get(i);
+            for (int c = 0; c < e.comps.size; c++) {
+                e.comps.get(c).update(Utils.UPS);
+            }
+        }
     }
 
     @Override
@@ -29,7 +41,8 @@ public class GameWorld implements Telegraph {
         switch (msg.message) {
             case TeleInfo.SPAWN_UNIT:
                 TeleInfo.SpawnUnit info = (TeleInfo.SpawnUnit) msg.extraInfo;
-                ents.add(new Entity(info.type, info.x, info.y));
+                ents.add(new Entity(info.type, info.x, info.y, idTicker,  info.playerId, this));
+                idTicker++;
                 break;
         }
         return false;

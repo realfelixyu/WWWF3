@@ -3,10 +3,9 @@ package com.wwwf.game.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.ai.msg.MessageManager;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.wwwf.game.Entity;
 import com.wwwf.game.Utils;
 
@@ -40,9 +39,9 @@ public class ClientInputProcessor extends InputAdapter {
     public boolean touchDown (int x, int y, int pointer, int button) {
         Vector3 worldCoord = screen.cam.unproject(new Vector3(x,y,0));
         if (button == Input.Buttons.LEFT) {
-            for (Entity ent : screen.world.ents) {
-                if (ent.hit(worldCoord.x, worldCoord.y)) {
-                    screen.selectedEntities.add(ent);
+            for (Entity e : screen.world.ents) {
+                if (ClientUtils.hitbox(e).contains(worldCoord.x, worldCoord.y)) {
+                    screen.selectedEntities.add(e);
                 } else {
                     screen.selectedEntities.clear();
                 }

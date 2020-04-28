@@ -10,8 +10,10 @@ public class TeleInfo {
         public Entity.Type type;
         public float x;
         public float y;
-        public SpawnUnit(Entity.Type type, float x, float y) {
+        public int playerId;
+        public SpawnUnit(Entity.Type type, float x, float y, int playerId) {
             this.type = type;
+            this.playerId = playerId;
             this.x = x;
             this.y = y;
         }

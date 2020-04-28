@@ -5,6 +5,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.wwwf.game.Entity;
 
 public class ClientGestureListener implements GestureDetector.GestureListener {
     ClientScreen screen;
@@ -44,8 +45,14 @@ public class ClientGestureListener implements GestureDetector.GestureListener {
 
     @Override
     public boolean panStop(float x, float y, int pointer, int button) {
+        for (Entity e : screen.world.ents) {
+            if (screen.selectRect != null && ClientUtils.hitbox(e).overlaps(screen.selectRect)) {
+                screen.selectedEntities.add(e);
+            }
+        }
         screen.selectRect = null;
         screen.selectRectFixCoord = null;
+
         return false;
     }
 
