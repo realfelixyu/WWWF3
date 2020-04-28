@@ -2,26 +2,23 @@ package com.wwwf.game.client;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.wwwf.game.Entity;
 import com.wwwf.game.GameWorld;
 import com.wwwf.game.TeleInfo;
 import com.wwwf.game.Utils;
-import com.wwwf.game.client.Animation2;
-import com.wwwf.game.client.AnimationLoader;
 
 import java.util.ArrayList;
 
@@ -29,24 +26,20 @@ public class ClientScreen implements Screen {
     GameWorld world;
     SpriteBatch batch;
     OrthographicCamera cam;
+    Vector2 camDir;
+    float camSpeed = 0.1f;
     float camWorldWidth = 10;
+    Vector3 selectRectFixCoord = null;
+    Rectangle selectRect;
     float viewAspRatio;
     OrthogonalTiledMapRenderer tiledMapRenderer;
     ShapeRenderer shapeRenderer;
     float time = 0f;
 
     //UI stuff
-    public float widthPixels, heightPixels;
-    protected Vector2 camDir;
-    protected float camSpeed = 5.0f;
     protected ArrayList<Entity> selectedEntities;
-    //input stuff
-    private ClientInputProcessor inputProcessor;
-    private InputMultiplexer inputMultiplexer;
     //for pan feature
-    public Rectangle selectRect;
     public Vector3 fixedCoord = null;
-    public Box2DDebugRenderer debugRenderer;
 
     public ClientScreen(GameWorld world) {
         AnimationLoader.loadAnimations();
@@ -56,15 +49,21 @@ public class ClientScreen implements Screen {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         tiledMapRenderer = new OrthogonalTiledMapRenderer(world.map.map, world.map.unitScale);
+        camDir = new Vector2(0,0);
+
+        InputProcessor inputProcessor = new ClientInputProcessor(this);
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(inputProcessor);
+        inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
+        Gdx.input.setInputProcessor(inputMultiplexer);
+
         Utils.message(0, world, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1));
         Utils.message(1, world, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1));
 
         selectedEntities = new ArrayList<>();
-        widthPixels = Gdx.graphics.getWidth();
-        heightPixels = Gdx.graphics.getHeight();
-        inputMultiplexer = new InputMultiplexer();
     }
     private void update() {
+        cam.translate(new Vector2(camDir).scl(camSpeed));
         cam.update();
         time += Gdx.graphics.getDeltaTime();
     }
@@ -81,9 +80,11 @@ public class ClientScreen implements Screen {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         for (Entity e : world.ents) {
-            Animation2 a = AnimationLoader.getAnimation(e.type, e.action);
+            Animation2 a = AnimationLoader.getAnimation(e.type, e.anim);
             TextureRegion[] r = a.getKeyframe(time);
-            batch.draw(r[0], e.pivotPos.x - a.getPivotRatio().x, e.pivotPos.y, e.baseWidth, e.baseHeight);
+            Vector2 pivotRatio = a.getPivotRatio();
+            batch.draw(r[0], e.pivotPos.x - pivotRatio.x * e.baseWidth,
+                    e.pivotPos.y - pivotRatio.y * e.baseHeight, e.baseWidth, e.baseHeight);
         }
         batch.end();
 
@@ -99,7 +100,11 @@ public class ClientScreen implements Screen {
 
         }
         shapeRenderer.end();
-
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        if( selectRect != null) {
+            shapeRenderer.rect(selectRect.x, selectRect.y, selectRect.width, selectRect.height);
+        }
+        shapeRenderer.end();
 
 
 
@@ -110,15 +115,6 @@ public class ClientScreen implements Screen {
         batch.dispose();
         tiledMapRenderer.dispose();
     }
-
-
-
-
-
-
-
-
-
 
     @Override
     public void show() {

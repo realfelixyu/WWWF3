@@ -43,8 +43,8 @@ public class AnimationLoader {
             JsonValue frameJson = jv.child();
             Texture backSheet = new Texture(Gdx.files.internal(filename + ".png"));
             Texture frontSheet = new Texture(Gdx.files.internal(filename + "_cl.png"));
-            backSheet.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-            frontSheet.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            backSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+            frontSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
             HashMap<Integer, TextureRegion[]> regions = new HashMap<>();
             HashMap<Integer, Float> millis = new HashMap<>();

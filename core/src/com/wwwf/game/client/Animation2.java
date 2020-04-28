@@ -30,7 +30,7 @@ public class Animation2 {
         }
     }
     public Vector2 getPivotRatio() {
-        return new Vector2(0.5f, 0.5f);
+        return new Vector2(0.4f, 0.5f);
     }
     public TextureRegion[] getKeyframe(float time) {
         time = time % highestTime;
