@@ -1,6 +1,8 @@
 package com.wwwf.game;
 
-public interface Component {
+import com.badlogic.gdx.ai.msg.Telegraph;
+
+public interface Component extends Telegraph {
     public void update(float dt);
     public void free();
 }

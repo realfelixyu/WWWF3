@@ -12,10 +12,12 @@ import java.util.TreeMap;
 
 public class Animation2 {
     NavigableMap<Float, TextureRegion[]> timeToTex;
+    NavigableMap<Float, Vector2> pivotPoints;
     float highestTime;
 
-    Animation2(float[] times, TextureRegion[] back, TextureRegion[] front) {
+    Animation2(float[] times, TextureRegion[] back, TextureRegion[] front, Vector2[] pivotArray) {
         timeToTex = new TreeMap<>();
+        pivotPoints = new TreeMap<>();
         float[] cumulative = new float[times.length];
         cumulative[0] = 0;
         for (int i = 1; i < times.length; i++) {
@@ -27,13 +29,13 @@ public class Animation2 {
             backFront[0] = back[i];
             backFront[1] = front[i];
             timeToTex.put(cumulative[i], backFront);
+            pivotPoints.put(cumulative[i], pivotArray[i]);
         }
     }
-    public Vector2 getPivotRatio() {
-        return new Vector2(0.4f, 0.5f);
+    public Vector2 getPivotRatio(float time) {
+        return pivotPoints.floorEntry(time % highestTime).getValue();
     }
     public TextureRegion[] getKeyframe(float time) {
-        time = time % highestTime;
-        return timeToTex.floorEntry(time).getValue();
+        return timeToTex.floorEntry(time % highestTime).getValue();
     }
 }

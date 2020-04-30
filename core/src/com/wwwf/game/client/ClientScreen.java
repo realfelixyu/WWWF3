@@ -8,6 +8,8 @@ import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.sun.org.apache.xml.internal.serializer.EncodingInfo;
@@ -41,6 +44,7 @@ public class ClientScreen implements Screen {
     float time = 0;
     Server server;
     Array<Entity> selectedEntities;
+    Box2DDebugRenderer box2DDebugRenderer;
 
     //work in progress
     public MiniMap minimap;
@@ -57,6 +61,7 @@ public class ClientScreen implements Screen {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(world.map.map, world.map.unitScale);
         camDir = new Vector2(0,0);
         selectedEntities = new Array<>();
+        box2DDebugRenderer = new Box2DDebugRenderer();
 
         tophud = new TopHud(this);
         //minimap = new MiniMap(world);
@@ -75,7 +80,6 @@ public class ClientScreen implements Screen {
         cam.translate(new Vector2(camDir).scl(camSpeed));
         cam.update();
         time += Gdx.graphics.getDeltaTime();
-        world.update();
         tophud.update();
     }
 
@@ -98,19 +102,18 @@ public class ClientScreen implements Screen {
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         for (Entity e : world.ents) {
-            Animation2 a = AnimationLoader.getAnimation(e.type, e.anim);
-            TextureRegion[] r = a.getKeyframe(time);
-            Vector2 pivotRatio = a.getPivotRatio();
+            TextureRegion[] r = AnimationLoader.getAnimation(e.type, e.anim).getKeyframe(time);
+            Rectangle hitbox = ClientUtils.hitbox(e, time);
             batch.setColor(Color.WHITE);
-
-            batch.draw(r[0], e.pivotPos.x - pivotRatio.x * e.baseWidth,
-                    e.pivotPos.y - pivotRatio.y * e.baseHeight, e.baseWidth, e.baseHeight);
-
-            Color c = Player.PLAYER_COLORS[e.playerId];
+            batch.draw(r[0], hitbox.x, hitbox.y, e.pivotPos.x, e.pivotPos.y,
+                    hitbox.width, hitbox.height, 1.0f, 1.0f, 0 );
+            Color c = new Color(Player.PLAYER_COLORS[e.playerId]);
             c.a = e.health;
             batch.setColor(c);
-            batch.draw(r[1], e.pivotPos.x - pivotRatio.x * e.baseWidth,
-                    e.pivotPos.y - pivotRatio.y * e.baseHeight, e.baseWidth, e.baseHeight);
+            batch.draw(r[1], hitbox.x, hitbox.y, e.pivotPos.x, e.pivotPos.y,
+                    hitbox.width, hitbox.height, 1.0f, 1.0f, 0 );
+
+
 
         }
         batch.end();
@@ -128,13 +131,15 @@ public class ClientScreen implements Screen {
         shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Entity e : world.ents) {
-            Rectangle r = ClientUtils.hitbox(e);
+            Rectangle r = ClientUtils.hitbox(e, time);
             shapeRenderer.rect(r.x, r.y, r.width, r.height);
         }
         if( selectRect != null) {
             shapeRenderer.rect(selectRect.x, selectRect.y, selectRect.width, selectRect.height);
         }
         shapeRenderer.end();
+
+        box2DDebugRenderer.render(world.physicsWorld, cam.combined);
 
         tophud.getHudStage().draw();
     }

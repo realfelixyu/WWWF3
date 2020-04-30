@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 public class Entity {
     public enum Type{SCOUT};
     public Vector2 pivotPos;
-    public float baseHeight;
+    //public float baseHeight;
     public float baseWidth;
     public Type type;
     private String action;
@@ -34,10 +34,11 @@ public class Entity {
             case SCOUT:
                 setAnimation("atk", "right");
                 baseWidth = 0.5f;
-                baseHeight = 0.5f;
+                //baseHeight = 0.50f * 1.38f;
                 CircleShape circleShape = new CircleShape();
-                circleShape.setRadius(baseWidth/2);
+                circleShape.setRadius(baseWidth/6);
                 comps.add(new PhysicsComponent(this, circleShape, BodyDef.BodyType.DynamicBody, world.physicsWorld));
+                circleShape.dispose();
                 break;
             default:
                 Gdx.app.log("ERROR", "Type " + type + " does not exist");

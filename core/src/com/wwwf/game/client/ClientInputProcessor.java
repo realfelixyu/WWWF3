@@ -40,7 +40,7 @@ public class ClientInputProcessor extends InputAdapter {
         Vector3 worldCoord = screen.cam.unproject(new Vector3(x,y,0));
         if (button == Input.Buttons.LEFT) {
             for (Entity e : screen.world.ents) {
-                if (ClientUtils.hitbox(e).contains(worldCoord.x, worldCoord.y)) {
+                if (ClientUtils.hitbox(e, screen.time).contains(worldCoord.x, worldCoord.y)) {
                     screen.selectedEntities.add(e);
                 } else {
                     screen.selectedEntities.clear();
