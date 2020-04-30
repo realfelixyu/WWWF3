@@ -34,8 +34,8 @@ public class TopHud implements Disposable {
 
         popCount = 0;
         gold = 0;
-        int seconds = (int) player.world.getTime() % 60;
-        int minutes = (int) player.world.getTime() / 60;
+        int seconds = (int) player.world.timeCount % 60;
+        int minutes = (int) player.world.timeCount / 60;
 
         //can pass in skins in label constructor in the future
         worldTimerLabel = new Label(String.format("%02d:%02d", minutes, seconds), new Label.LabelStyle(new BitmapFont(), Color.GREEN));
@@ -57,7 +57,7 @@ public class TopHud implements Disposable {
     }
 
     public void update() {
-        worldTimerLabel.setText(String.format("%02d:%02d", (int)player.world.getTime() / 60, (int)player.world.getTime() % 60));
+        worldTimerLabel.setText(String.format("%02d:%02d", (int)player.world.timeCount / 60, (int)player.world.timeCount % 60));
     }
 
     @Override

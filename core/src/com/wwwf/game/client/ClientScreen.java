@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,14 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntMap;
-import com.sun.org.apache.xml.internal.serializer.EncodingInfo;
 import com.wwwf.game.*;
-import com.wwwf.game.client.Animation2;
-import com.wwwf.game.client.AnimationLoader;
-
-import javax.swing.plaf.InputMapUIResource;
-import java.util.Objects;
 
 public class ClientScreen implements Screen {
     GameWorld world;
@@ -45,6 +37,8 @@ public class ClientScreen implements Screen {
     //work in progress
     public MiniMap minimap;
     public TopHud tophud;
+    public BottomHud bottomhud;
+    public Player player;
 
     public ClientScreen(Server server) {
         AnimationLoader.loadAnimations();
@@ -58,25 +52,28 @@ public class ClientScreen implements Screen {
         camDir = new Vector2(0,0);
         selectedEntities = new Array<>();
 
+        player = new Player(1, 2);
         tophud = new TopHud(this);
+        bottomhud = new BottomHud(world, player, this);
         //minimap = new MiniMap(world);
 
         InputProcessor inputProcessor = new ClientInputProcessor(this);
+        HudInputProcessor hudProcessor = new HudInputProcessor(bottomhud);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(hudProcessor);
         inputMultiplexer.addProcessor(inputProcessor);
         inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
         Gdx.input.setInputProcessor(inputMultiplexer);
 
         Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1, 1));
         Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1, 2));
-
     }
     private void update() {
         cam.translate(new Vector2(camDir).scl(camSpeed));
         cam.update();
         time += Gdx.graphics.getDeltaTime();
-        world.update();
         tophud.update();
+        bottomhud.update();
     }
 
     @Override
@@ -137,6 +134,9 @@ public class ClientScreen implements Screen {
         shapeRenderer.end();
 
         tophud.getHudStage().draw();
+        if (bottomhud.isSelected()) {
+            bottomhud.render();
+        }
     }
 
 

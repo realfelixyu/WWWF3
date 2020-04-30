@@ -39,8 +39,9 @@ public class MainMenuScreen implements Screen {
     Texture exitButtonInactive;
 
     public MainMenuScreen (Entry entry){
+        this.entry = entry;
         //sound
-        buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/buttonsounds/click3.mp3"));
+        buttonSound = Gdx.audio.newSound(Gdx.files.internal("sound/buttonsounds/click1.mp3"));
 
         //camera stuff
         float w = Gdx.graphics.getWidth();
@@ -54,8 +55,8 @@ public class MainMenuScreen implements Screen {
         table = new Table();
 
         //load texture
-        playButtonActive = new Texture("buttontexture/play_active.png");
-        playButtonInactive = new Texture("buttontexture/play_inactive.png");
+        playButtonActive = new Texture("mainmenu/play_active.png");
+        playButtonInactive = new Texture("mainmenu/play_inactive.png");
         TextureRegionDrawable pbaDrawable = new TextureRegionDrawable(new TextureRegion(playButtonActive));
         TextureRegionDrawable pbiDrawable = new TextureRegionDrawable(new TextureRegion(playButtonInactive));
 

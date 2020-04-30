@@ -6,11 +6,11 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /** Hold all the information related to the simulation. Can receive messages. */
 
@@ -19,7 +19,7 @@ public class GameWorld implements Telegraph {
     public Map map;
     public Array<Entity> ents;
     public int idTicker;
-    private float timeCount;
+    public float timeCount;
 
     GameWorld() {
         physicsWorld = new World(new Vector2(0, 0.0f), true);
@@ -37,7 +37,6 @@ public class GameWorld implements Telegraph {
             }
         }
         timeCount += Utils.UPS;
-        physicsWorld.step(1/60f, 6,2);
     }
 
     @Override
@@ -52,7 +51,24 @@ public class GameWorld implements Telegraph {
         return false;
     }
 
-    public float getTime() {
-        return timeCount;
+    public ArrayList<Vector2> findPath(Vector2 orig, Vector2 dest) {
+        Node origNode = new Node(getNodeCoordinatesX(orig.x), getNodeCoordinatesY(orig.y));
+        Node destNode = new Node(getNodeCoordinatesX(dest.x), getNodeCoordinatesY(dest.y));
+
+        AStar aStar = new AStar( map.mapWidthInTiles, map.mapHeightInTiles,
+                origNode, destNode);
+        List<Node> path = aStar.findPath();
+        ArrayList<Vector2> outPath = new ArrayList<Vector2>();
+        for(Node node: path){
+            outPath.add(new Vector2(node.getRow() + 0.5f,node.getCol() + 0.5f));
+        }
+        return outPath;
+    }
+
+    private int getNodeCoordinatesX(float x) {
+        return (int) Math.min( map.mapWidthInTiles, Math.max(0 ,( x / map.metersPerTile) ));
+    }
+    private int getNodeCoordinatesY(float y) {
+        return (int) Math.min( map.mapHeightInTiles, Math.max( 0  ,( y / map.metersPerTile) ));
     }
 }
