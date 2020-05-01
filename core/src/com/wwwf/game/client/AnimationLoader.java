@@ -73,10 +73,8 @@ public class AnimationLoader {
                 for (int ix = x; ix < x + w; ix++) {
                     for (int iy = y; iy < y + h; iy++) {
                         if (pivSheet.getPixel(ix, iy) == 0xFF0000FF) {
-                            //System.out.println((float) ix/ );
                             float fx = (float) (ix - x)/ (float) (w);
                             float fy = (float) (iy - y)/ (float) (h);
-                            System.out.println(fx);
                             pivots.put(id, new Vector2(fx, 1 - fy));
                         }
                     }

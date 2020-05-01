@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.wwwf.game.Entity;
+import com.wwwf.game.TeleInfo;
 import com.wwwf.game.Utils;
 
 public class ClientInputProcessor extends InputAdapter {
@@ -47,12 +48,11 @@ public class ClientInputProcessor extends InputAdapter {
                 }
             }
         }
-//        else if(button == Input.Buttons.RIGHT) {
-//            for (Entity entity : client.selectedEntities) {
-//                MessageManager.getInstance().dispatchMessage(0, null,
-//                        server.world, Constants.TELEGRAM_MOVETO, new Vector2(worldCoord.x,worldCoord.y), false);
-//            }
-//        }
+        else if(button == Input.Buttons.RIGHT) {
+            for (Entity entity : screen.selectedEntities) {
+                Utils.message(0, screen.world, TeleInfo.MOVE_TO, new TeleInfo.MoveUnit(entity.id, worldCoord.x, worldCoord.y));
+            }
+        }
         if(screen.selectRectFixCoord == null) {
             screen.selectRectFixCoord = screen.cam.unproject(new Vector3(x, y, 0));
         }

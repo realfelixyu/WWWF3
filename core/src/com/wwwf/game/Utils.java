@@ -11,6 +11,8 @@ public class Utils {
     public static final Vector2 RIGHT = new Vector2(1,0);
     public static final Vector2 ZERO = new Vector2(0,0 );
     public static final float UPS = 1/60f;
+    public static final int NODE_DENSITY = 2;
+    public static final float STOPPING_RADIUS = 0.3f;
 
     public static void message(int delay, Telegraph recipient, int type, Object extraInfo) {
         MessageManager.getInstance().dispatchMessage(delay, null, recipient, type, extraInfo);

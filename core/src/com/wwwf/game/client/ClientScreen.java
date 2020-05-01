@@ -74,7 +74,6 @@ public class ClientScreen implements Screen {
 
         Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1, 1));
         Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1, 2));
-
     }
     private void update() {
         cam.translate(new Vector2(camDir).scl(camSpeed));
@@ -112,9 +111,6 @@ public class ClientScreen implements Screen {
             batch.setColor(c);
             batch.draw(r[1], hitbox.x, hitbox.y, e.pivotPos.x, e.pivotPos.y,
                     hitbox.width, hitbox.height, 1.0f, 1.0f, 0 );
-
-
-
         }
         batch.end();
 
@@ -133,6 +129,17 @@ public class ClientScreen implements Screen {
         for (Entity e : world.ents) {
             Rectangle r = ClientUtils.hitbox(e, time);
             shapeRenderer.rect(r.x, r.y, r.width, r.height);
+            for (Component c : e.comps) {
+                if (c instanceof BasicMoveComponent) {
+                    BasicMoveComponent mc = (BasicMoveComponent) c;
+                    if (!mc.currentPath.isEmpty()) {
+                        shapeRenderer.line(e.pivotPos, mc.currentPath.get(0));
+                        for (int i = 0; i < mc.currentPath.size - 1; i++) {
+                            shapeRenderer.line(mc.currentPath.get(i), mc.currentPath.get(i + 1));
+                        }
+                    }
+                }
+            }
         }
         if( selectRect != null) {
             shapeRenderer.rect(selectRect.x, selectRect.y, selectRect.width, selectRect.height);
