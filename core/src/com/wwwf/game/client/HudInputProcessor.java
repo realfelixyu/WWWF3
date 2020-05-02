@@ -3,11 +3,9 @@ package com.wwwf.game.client;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.ai.msg.MessageManager;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.wwwf.game.Entity;
 
 public class HudInputProcessor extends InputAdapter implements GestureDetector.GestureListener {
@@ -25,11 +23,13 @@ public class HudInputProcessor extends InputAdapter implements GestureDetector.G
         if (hud.isSelected()) {
             Vector3 worldCoord = hud.screen.cam.unproject(new Vector3(x, y, 0));
             if (button == Input.Buttons.LEFT) {
-                if (hud.hudStage.hit(worldCoord.x, worldCoord.y, true) != null) {
+                if (y > ClientScreen.screenHeight -  BottomHud.height) {
                     //TODO implement buttons
-                    System.out.println("something");
+                    return false;
                 } else {
                     hud.screen.selectedEntities.clear();
+                    hud.setSelected(false);
+                    return false;
                 }
             } else if (button == Input.Buttons.RIGHT) {
                 for (Entity ent : hud.screen.selectedEntities) {

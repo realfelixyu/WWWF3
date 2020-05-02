@@ -39,6 +39,8 @@ public class ClientScreen implements Screen {
     public TopHud tophud;
     public BottomHud bottomhud;
     public Player player;
+    public static int screenHeight = Gdx.graphics.getHeight();
+    public InputMultiplexer inputMultiplexer;
 
     public ClientScreen(Server server) {
         AnimationLoader.loadAnimations();
@@ -58,12 +60,16 @@ public class ClientScreen implements Screen {
         //minimap = new MiniMap(world);
 
         InputProcessor inputProcessor = new ClientInputProcessor(this);
+        HudInputGestureListener hudInputGestureListener = new HudInputGestureListener(bottomhud, this);
         HudInputProcessor hudProcessor = new HudInputProcessor(bottomhud);
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(hudProcessor);
+        inputMultiplexer.addProcessor(new GestureDetector(hudInputGestureListener));
+        inputMultiplexer.addProcessor(bottomhud.hudStage);
         inputMultiplexer.addProcessor(inputProcessor);
         inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
         Gdx.input.setInputProcessor(inputMultiplexer);
+
 
         Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1, 1));
         Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1, 2));
@@ -74,6 +80,8 @@ public class ClientScreen implements Screen {
         time += Gdx.graphics.getDeltaTime();
         tophud.update();
         bottomhud.update();
+        if (bottomhud.isSelected()) {
+        }
     }
 
     @Override
