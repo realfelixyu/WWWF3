@@ -23,7 +23,7 @@ public class HudInputProcessor extends InputAdapter implements GestureDetector.G
         if (hud.isSelected()) {
             Vector3 worldCoord = hud.screen.cam.unproject(new Vector3(x, y, 0));
             if (button == Input.Buttons.LEFT) {
-                if (y > ClientScreen.screenHeight -  BottomHud.height) {
+                if (y > Gdx.graphics.getHeight() -  BottomHud.height) {
                     //TODO implement buttons
                     return false;
                 } else {

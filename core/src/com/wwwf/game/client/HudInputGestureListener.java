@@ -1,5 +1,6 @@
 package com.wwwf.game.client;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -39,7 +40,7 @@ public class HudInputGestureListener implements GestureDetector.GestureListener 
         if (hud.isSelected()) {
             if (initialSelected) {
                 return true;
-            } else if (y > ClientScreen.screenHeight - BottomHud.height) {
+            } else if (y > Gdx.graphics.getHeight() - BottomHud.height) {
                 initialSelected = true;
                 return true;
             }

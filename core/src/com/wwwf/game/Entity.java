@@ -54,9 +54,8 @@ public class Entity {
             case FACTORY:
                 setAnimation("idle", "forward");
                 baseWidth = 0.8f;
-                baseHeight = 0.8f;
                 PolygonShape polyShape = new PolygonShape();
-                polyShape.setAsBox(baseWidth, baseHeight);
+                polyShape.setAsBox(baseWidth, baseWidth);
                 comps.add(new PhysicsComponent(this, polyShape, BodyDef.BodyType.StaticBody, world.physicsWorld));
                 break;
             default:

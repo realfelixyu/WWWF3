@@ -22,7 +22,7 @@ public class GameWorld implements Telegraph {
     public Array<Entity> ents;
     public IntMap<Entity> entById;
     public int idTicker;
-    private float timeCount;
+    public float timeCount;
     AStar aStar;
     @Override
     public boolean handleMessage(Telegram msg) {
@@ -94,10 +94,5 @@ public class GameWorld implements Telegraph {
         int x = (int) Math.min( map.mapWidthInTiles, Math.max(0 ,( v.x / (map.metersPerTile )* Utils.NODE_DENSITY)));
         int y = (int) Math.min( map.mapHeightInTiles, Math.max( 0  ,( v.y / (map.metersPerTile )* Utils.NODE_DENSITY)));
         return new Node(x, y);
-    }
-
-
-    public float getTime() {
-        return timeCount;
     }
 }

@@ -27,6 +27,7 @@ import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
 
 import javax.swing.plaf.InputMapUIResource;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class ClientScreen implements Screen {
@@ -43,8 +44,11 @@ public class ClientScreen implements Screen {
     ShapeRenderer shapeRenderer;
     float time = 0;
     Server server;
+    public BottomHud bottomhud;
+    public Player player;
     Array<Entity> selectedEntities;
     Box2DDebugRenderer box2DDebugRenderer;
+    InputMultiplexer inputMultiplexer;
 
     //work in progress
     public MiniMap minimap;
@@ -63,15 +67,21 @@ public class ClientScreen implements Screen {
         selectedEntities = new Array<>();
         box2DDebugRenderer = new Box2DDebugRenderer();
 
+        player = new Player(1, 2);
         tophud = new TopHud(this);
+        bottomhud = new BottomHud(world, player, this);
         //minimap = new MiniMap(world);
 
         InputProcessor inputProcessor = new ClientInputProcessor(this);
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        HudInputGestureListener hudInputGestureListener = new HudInputGestureListener(bottomhud, this);
+        HudInputProcessor hudProcessor = new HudInputProcessor(bottomhud);
+        inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(hudProcessor);
+        inputMultiplexer.addProcessor(new GestureDetector(hudInputGestureListener));
+        inputMultiplexer.addProcessor(bottomhud.hudStage);
         inputMultiplexer.addProcessor(inputProcessor);
         inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
         Gdx.input.setInputProcessor(inputMultiplexer);
-
 
         /** Test spawn units */
         Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1, 1));
@@ -81,8 +91,10 @@ public class ClientScreen implements Screen {
         cam.translate(new Vector2(camDir).scl(camSpeed));
         cam.update();
         time += Gdx.graphics.getDeltaTime();
-        world.update();
         tophud.update();
+        bottomhud.update();
+        if (bottomhud.isSelected()) {
+        }
     }
 
     @Override
@@ -161,6 +173,10 @@ public class ClientScreen implements Screen {
         box2DDebugRenderer.render(world.physicsWorld, cam.combined);
 
         tophud.getHudStage().draw();
+
+        if (bottomhud.isSelected()) {
+            bottomhud.render();
+        }
     }
 
 
