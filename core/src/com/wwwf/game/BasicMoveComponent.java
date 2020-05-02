@@ -5,8 +5,10 @@ import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.fsm.StateMachine;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.utils.Array;
 
+/** Moves the entity like a scout-type unit. Send a path for the entity to follow using MOVE_ALONG message*/
 public class BasicMoveComponent implements Component{
     Entity e;
     StateMachine<BasicMoveComponent, MoveState> fsm;
@@ -34,13 +36,11 @@ public class BasicMoveComponent implements Component{
 
             @Override
             public void update(BasicMoveComponent move) {
-
+                ProgressBar progressBar;
             }
 
             @Override
-            public void exit(BasicMoveComponent move) {
-
-            }
+            public void exit(BasicMoveComponent move) { }
 
             @Override
             public boolean onMessage(BasicMoveComponent move, Telegram telegram) {
@@ -73,9 +73,7 @@ public class BasicMoveComponent implements Component{
             }
 
             @Override
-            public void exit(BasicMoveComponent move) {
-
-            }
+            public void exit(BasicMoveComponent move) { }
 
             @Override
             public boolean onMessage(BasicMoveComponent move, Telegram telegram) {
@@ -84,19 +82,13 @@ public class BasicMoveComponent implements Component{
         },
         GLOBAL_STATE() {
             @Override
-            public void enter(BasicMoveComponent move) {
-
-            }
+            public void enter(BasicMoveComponent move) { }
 
             @Override
-            public void update(BasicMoveComponent move) {
-
-            }
+            public void update(BasicMoveComponent move) { }
 
             @Override
-            public void exit(BasicMoveComponent move) {
-
-            }
+            public void exit(BasicMoveComponent move) { }
 
             @Override
             public boolean onMessage(BasicMoveComponent move, Telegram telegram) {

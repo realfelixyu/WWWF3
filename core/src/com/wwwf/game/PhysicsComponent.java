@@ -4,10 +4,26 @@ import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 
+/** Given a shape, updates the animation direction of the controlling entity, and constrains the speed of the object
+ * to a maximum speed */
 public class PhysicsComponent implements Component{
     Entity master;
     Body body;
     float maxSpeed = 0.8f;
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        switch (msg.message) {
+            case TeleInfo.APPLY_FORCE:
+                Vector2 force = (Vector2) msg.extraInfo;
+                body.applyForceToCenter(force, true);
+                break;
+            case TeleInfo.SET_VELOCITY:
+                Vector2 vel = (Vector2) msg.extraInfo;
+                body.setLinearVelocity(vel);
+                break;
+        }
+        return false;
+    }
     PhysicsComponent(Entity master, Shape shape, BodyDef.BodyType bodyType, World physicsWorld) {
         this.master = master;
         BodyDef bodyDef = new BodyDef();
@@ -44,20 +60,7 @@ public class PhysicsComponent implements Component{
         body = null;
     }
 
-    @Override
-    public boolean handleMessage(Telegram msg) {
-        switch (msg.message) {
-            case TeleInfo.APPLY_FORCE:
-                Vector2 force = (Vector2) msg.extraInfo;
-                body.applyForceToCenter(force, true);
-                break;
-                case TeleInfo.SET_VELOCITY:
-                    Vector2 vel = (Vector2) msg.extraInfo;
-                    body.setLinearVelocity(vel);
-                    break;
-        }
-        return false;
-    }
+
 
     @Override
     public int[] teleCodes() {

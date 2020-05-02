@@ -16,7 +16,8 @@ import com.badlogic.gdx.utils.IntMap;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Hold all the information related to the simulation. Can receive messages. */
+/** Hold all the information related to the simulation. Can receive messages. Entities must be added using addEntity()
+ *  since a HashMap is also maintained to look up entities by id. */
 
 public class GameWorld implements Telegraph {
     public World physicsWorld;
@@ -26,28 +27,6 @@ public class GameWorld implements Telegraph {
     public int idTicker;
     private float timeCount;
     AStar aStar;
-
-    GameWorld() {
-        physicsWorld = new World(new Vector2(0, 0f), true);
-        map = new Map("maps/bigfield/bigfield.tmx");
-        ents = new Array<>();
-        idTicker = 1;
-        timeCount = 0;
-        aStar = new AStar(map.mapWidthInTiles, map.mapHeightInTiles, new Node(0,0), new Node(0,0));
-        entById = new IntMap<>();
-    }
-    public void update() {
-        physicsWorld.step(Utils.UPS, 6, 2);
-        for (int i = 0; i < ents.size; i++) {
-            Entity e = ents.get(i);
-            e.dispatcher.update();
-            for (int c = 0; c < e.comps.size; c++) {
-                e.comps.get(c).update(Utils.UPS);
-            }
-        }
-        timeCount += Utils.UPS;
-    }
-
     @Override
     public boolean handleMessage(Telegram msg) {
         switch (msg.message) {
@@ -72,6 +51,29 @@ public class GameWorld implements Telegraph {
         }
         return false;
     }
+
+    GameWorld() {
+        physicsWorld = new World(new Vector2(0, 0f), true);
+        map = new Map("maps/bigfield/bigfield.tmx");
+        ents = new Array<>();
+        idTicker = 1;
+        timeCount = 0;
+        aStar = new AStar(map.mapWidthInTiles, map.mapHeightInTiles, new Node(0,0), new Node(0,0));
+        entById = new IntMap<>();
+    }
+    public void update() {
+        physicsWorld.step(Utils.UPS, 6, 2);
+        for (int i = 0; i < ents.size; i++) {
+            Entity e = ents.get(i);
+            e.dispatcher.update();
+            for (int c = 0; c < e.comps.size; c++) {
+                e.comps.get(c).update(Utils.UPS);
+            }
+        }
+        timeCount += Utils.UPS;
+    }
+
+
     public void addEntity(Entity e) {
         ents.add(e);
         entById.put(e.id, e);
@@ -79,13 +81,13 @@ public class GameWorld implements Telegraph {
 
     public Array<Vector2> findPathFromTo(Vector2 from, Vector2 to) {
 
-        aStar = new AStar(map.mapWidthInTiles, map.mapHeightInTiles, nodeFromVector2(from),
+        aStar = new AStar(map.mapWidthInTiles * Utils.NODE_DENSITY,
+                map.mapHeightInTiles * Utils.NODE_DENSITY, nodeFromVector2(from),
                 nodeFromVector2(to));
         List<Node> path = aStar.findPath();
-        System.out.println(path);
         Array<Vector2> a = new Array<Vector2>(path.size());
         for (Node n : path) {
-            Vector2 v = new Vector2(n.getRow() * map.metersPerTile , n.getCol() * map.metersPerTile);
+            Vector2 v = new Vector2(n.getRow() * map.metersPerTile, n.getCol() * map.metersPerTile);
             v.scl(1/(float)Utils.NODE_DENSITY);
             a.add(v);
         }

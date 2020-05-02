@@ -14,6 +14,20 @@ import java.util.TimerTask;
  * handled by the client.
  */
 public class Server implements Telegraph {
+    /** Below are all of the messages that can be sent from the client */
+    @Override
+    public boolean handleMessage(Telegram msg) {
+        switch (msg.message) {
+            case TeleInfo.SPAWN_UNIT:
+                Utils.message(0, world, TeleInfo.SPAWN_UNIT, msg.extraInfo);
+                break;
+            case TeleInfo.MOVE_TO:
+                Utils.message(0, world, TeleInfo.MOVE_TO, msg.extraInfo);
+                break;
+        }
+        return true;
+    }
+
     public GameWorld world;
     Server() {
         world = new GameWorld();
@@ -28,13 +42,5 @@ public class Server implements Telegraph {
     }
 
 
-    @Override
-    public boolean handleMessage(Telegram msg) {
-        switch (msg.message) {
-            case TeleInfo.SPAWN_UNIT:
-                Utils.message(0, world, TeleInfo.SPAWN_UNIT, msg.extraInfo);
-                break;
-        }
-        return true;
-    }
+
 }

@@ -50,7 +50,7 @@ public class ClientInputProcessor extends InputAdapter {
         }
         else if(button == Input.Buttons.RIGHT) {
             for (Entity entity : screen.selectedEntities) {
-                Utils.message(0, screen.world, TeleInfo.MOVE_TO, new TeleInfo.MoveUnit(entity.id, worldCoord.x, worldCoord.y));
+                Utils.message(0, screen.server, TeleInfo.MOVE_TO, new TeleInfo.MoveUnit(entity.id, worldCoord.x, worldCoord.y));
             }
         }
         if(screen.selectRectFixCoord == null) {

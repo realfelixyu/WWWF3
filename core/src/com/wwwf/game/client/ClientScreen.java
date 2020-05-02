@@ -27,6 +27,9 @@ import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
 
 import javax.swing.plaf.InputMapUIResource;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class ClientScreen implements Screen {
@@ -72,6 +75,8 @@ public class ClientScreen implements Screen {
         inputMultiplexer.addProcessor(new GestureDetector(new ClientGestureListener(this)));
         Gdx.input.setInputProcessor(inputMultiplexer);
 
+
+        /** Test spawn units */
         Utils.message(0, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 1, 1, 1));
         Utils.message(1, server, TeleInfo.SPAWN_UNIT, new TeleInfo.SpawnUnit(Entity.Type.SCOUT, 2, 1, 2));
     }
@@ -90,14 +95,21 @@ public class ClientScreen implements Screen {
 
         tiledMapRenderer.setView(cam);
         tiledMapRenderer.render();
-
+        /** Sort by Z-order so entities infront get rendered last*/
+        world.ents.sort(new Comparator<Entity>() {
+            @Override
+            public int compare(Entity o1, Entity o2) {
+                return (o1.pivotPos.y > o2.pivotPos.y) ? -1 : 1;
+            }
+        });
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.GREEN);
+        /** Draw select circle */
         for (Entity e : selectedEntities) {
             shapeRenderer.circle(e.pivotPos.x, e.pivotPos.y, e.baseWidth/2, 40);
         }
         shapeRenderer.end();
-
+        /** Draw color and background layer of entity */
         batch.setProjectionMatrix(cam.combined);
         batch.begin();
         for (Entity e : world.ents) {
@@ -114,6 +126,7 @@ public class ClientScreen implements Screen {
         }
         batch.end();
 
+        /** Draw the pivot point of each entity in a fancy way */
         shapeRenderer.setProjectionMatrix(cam.combined);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Entity e : world.ents) {
@@ -124,6 +137,7 @@ public class ClientScreen implements Screen {
             shapeRenderer.setColor(Color.BLACK);
             shapeRenderer.circle(e.pivotPos.x, e.pivotPos.y, 0.01f, 10);
         }
+        /** Draw animation hitboxes */
         shapeRenderer.end();
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         for (Entity e : world.ents) {
@@ -141,6 +155,7 @@ public class ClientScreen implements Screen {
                 }
             }
         }
+        /** Draw select-pan rectangle) */
         if( selectRect != null) {
             shapeRenderer.rect(selectRect.x, selectRect.y, selectRect.width, selectRect.height);
         }

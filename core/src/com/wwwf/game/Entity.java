@@ -9,8 +9,10 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.utils.Array;
 
-/**  Entities represent units, buildings and potentially more. Enitity probably should not store a pointer to the
- * world.*/
+/**  Entities represent units, buildings and potentially more. Entity probably should not store a pointer to the
+ * world. Components to entity MUST be added to entity using addComponent. And animations MUST be set using
+ * setAnimation(). Feel free to add fields relevant to the simulation here, BUT don't add too many, keep as many
+ * things in the components as possible. Messages can be dispatched to the components using dispatcher.dispatchMessage()*/
 public class Entity {
     public enum Type{SCOUT};
     public Vector2 pivotPos;
@@ -41,6 +43,7 @@ public class Entity {
             case SCOUT:
                 setAnimation("atk", "right");
                 baseWidth = 0.5f;
+                // TODO eventually store shape for each unit type instead of making a new one.
                 CircleShape circleShape = new CircleShape();
                 circleShape.setRadius(baseWidth/6);
                 addComponent(new PhysicsComponent(this, circleShape, BodyDef.BodyType.DynamicBody, world.physicsWorld));

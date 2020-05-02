@@ -2,7 +2,9 @@ package com.wwwf.game;
 
 import com.badlogic.gdx.math.Vector2;
 
+/** Contains codes for telegraph values and structs to send information using the messaging system. */
 public class TeleInfo {
+
     public static final int
     /**     message id              extraInfo */
             SPAWN_UNIT = 1,         //SpawnUnit
