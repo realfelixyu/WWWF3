@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.wwwf.game.Entity;
-import com.wwwf.game.TeleInfo;
 import com.wwwf.game.Utils;
 
 public class ClientInputProcessor extends InputAdapter {
@@ -41,7 +40,7 @@ public class ClientInputProcessor extends InputAdapter {
         Vector3 worldCoord = screen.cam.unproject(new Vector3(x,y,0));
         if (button == Input.Buttons.LEFT) {
             for (Entity e : screen.world.ents) {
-                if (ClientUtils.hitbox(e, screen.time).contains(worldCoord.x, worldCoord.y)) {
+                if (ClientUtils.hitbox(e).contains(worldCoord.x, worldCoord.y)) {
                     screen.selectedEntities.add(e);
                 } else {
                     screen.selectedEntities.clear();

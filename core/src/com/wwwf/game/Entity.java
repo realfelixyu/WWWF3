@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 
 /**  Entities represent units, buildings and potentially more. Entity probably should not store a pointer to the
@@ -14,7 +15,7 @@ import com.badlogic.gdx.utils.Array;
  * setAnimation(). Feel free to add fields relevant to the simulation here, BUT don't add too many, keep as many
  * things in the components as possible. Messages can be dispatched to the components using dispatcher.dispatchMessage()*/
 public class Entity {
-    public enum Type{SCOUT};
+    public enum Type{SCOUT, FACTORY};
     public Vector2 pivotPos;
     public float baseWidth;
     public Type type;
@@ -50,6 +51,14 @@ public class Entity {
                 circleShape.dispose();
                 addComponent(new BasicMoveComponent(this));
                 break;
+            case FACTORY:
+                setAnimation("idle", "forward");
+                baseWidth = 0.8f;
+                baseHeight = 0.8f;
+                PolygonShape polyShape = new PolygonShape();
+                polyShape.setAsBox(baseWidth, baseHeight);
+                comps.add(new PhysicsComponent(this, polyShape, BodyDef.BodyType.StaticBody, world.physicsWorld));
+                break;
             default:
                 Gdx.app.log("ERROR", "Type " + type + " does not exist");
         }
@@ -67,6 +76,12 @@ public class Entity {
         this.direction = (dir == null) ? this.direction :  dir;
         this.action = (action == null) ? this.action : action;
         anim = this.action + "_" + this.direction ;
+    }
+
+
+
+    public String toString() {
+        return " " + id + ":" + pivotPos;
     }
 }
 

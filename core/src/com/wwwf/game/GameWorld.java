@@ -4,13 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.GdxAI;
 import com.badlogic.gdx.ai.msg.Telegram;
 import com.badlogic.gdx.ai.msg.Telegraph;
-import com.badlogic.gdx.ai.sched.LoadBalancingScheduler;
-import com.badlogic.gdx.math.Path;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.IntMap;
 
 import java.util.ArrayList;

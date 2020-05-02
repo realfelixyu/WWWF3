@@ -27,9 +27,6 @@ import com.wwwf.game.client.Animation2;
 import com.wwwf.game.client.AnimationLoader;
 
 import javax.swing.plaf.InputMapUIResource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Objects;
 
 public class ClientScreen implements Screen {
@@ -84,6 +81,7 @@ public class ClientScreen implements Screen {
         cam.translate(new Vector2(camDir).scl(camSpeed));
         cam.update();
         time += Gdx.graphics.getDeltaTime();
+        world.update();
         tophud.update();
     }
 
@@ -104,7 +102,6 @@ public class ClientScreen implements Screen {
         });
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.GREEN);
-        /** Draw select circle */
         for (Entity e : selectedEntities) {
             shapeRenderer.circle(e.pivotPos.x, e.pivotPos.y, e.baseWidth/2, 40);
         }

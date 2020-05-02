@@ -1,6 +1,7 @@
 package com.wwwf.game;
 
 import com.badlogic.gdx.math.Vector2;
+import org.graalvm.compiler.lir.sparc.SPARCMove;
 
 /** Contains codes for telegraph values and structs to send information using the messaging system. */
 public class TeleInfo {
